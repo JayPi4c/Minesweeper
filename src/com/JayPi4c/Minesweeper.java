@@ -21,10 +21,6 @@ public class Minesweeper extends JFrame implements MouseListener {
 
 	public Minesweeper() {
 		super("Minesweeper");
-
-		Field.preLoad();
-		Board.preLoad();
-
 		JMenuBar menuBar = new JMenuBar();
 		JMenuItem settings = new JMenuItem("settings");
 		JMenu test = new JMenu("Test");
