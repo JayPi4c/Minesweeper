@@ -29,13 +29,13 @@ public class Board extends JPanel {
 
 	public Board(Minesweeper m, int width, int height) {
 		this.m = m;
-		this.w = width;
-		this.h = height;
-		setPreferredSize(new Dimension(cols * width, rows * height));
+		this.w = width / cols;
+		this.h = height / rows;
+		setPreferredSize(new Dimension(width, height));
 		board = new Field[cols][rows];
 		for (int i = 0; i < cols; i++) {
 			for (int j = 0; j < rows; j++) {
-				board[i][j] = new Field(m, i, j, width, height);
+				board[i][j] = new Field(m, i, j, w, h);
 			}
 		}
 	}
@@ -120,6 +120,19 @@ public class Board extends JPanel {
 	}
 
 	// ----------------------HELPER-------------------------//
+
+	public void changeSize(int w, int h) {
+		this.w = w / cols;
+		this.h = h / rows;
+		setPreferredSize(new Dimension(w, h));
+		for (Field fs[] : board) {
+			for (Field f : fs) {
+				f.changeSize(this.w, this.h);
+			}
+		}
+
+	}
+
 	public Field[][] getBoard() {
 		return this.board;
 	}

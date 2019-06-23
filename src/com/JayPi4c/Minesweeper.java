@@ -2,6 +2,10 @@ package com.JayPi4c;
 
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -19,15 +23,26 @@ public class Minesweeper extends JFrame implements MouseListener {
 	private boolean gameover = false;
 	private boolean gameWon = false;
 
+	private int width = 500;
+	private int height = 500;
+
 	public Minesweeper() {
 		super("Minesweeper");
 		JMenuBar menuBar = new JMenuBar();
 		JMenuItem settings = new JMenuItem("settings");
+		settings.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO: Adding Actions to Settingsmenu
+				System.out.println("Settingsmenu was pressed");
+			}
+		});
 		JMenu test = new JMenu("Test");
 		test.add(settings);
 		menuBar.add(test);
 		this.setJMenuBar(menuBar);
-		b = new Board(this, 20, 20);
+		b = new Board(this, width, height);
 		b.init();
 		this.add(b);
 		this.addMouseListener(this);
@@ -36,6 +51,17 @@ public class Minesweeper extends JFrame implements MouseListener {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
+
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				Insets insets = getInsets();
+				int w = e.getComponent().getWidth() - (insets.left + insets.right);
+				int h = e.getComponent().getHeight() - (insets.bottom + insets.top + 20);
+				b.changeSize(w, h);
+				repaint();
+			}
+		});
 
 	}
 

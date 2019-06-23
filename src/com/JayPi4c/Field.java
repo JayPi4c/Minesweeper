@@ -96,86 +96,89 @@ public class Field {
 	}
 
 	public void show(Graphics2D g2d) {
-		int w = i * width, h = j * height;
+		int x = i * width, y = j * height;
 
 		if (open) {
 			if (this.bomb) {
-				g2d.drawImage(bombPic, w, h, null);
+				g2d.drawImage(bombPic, x, y, width, height, null);
 			} else {
 				switch (bombsAdjecent) {
 				case 0:
-					g2d.drawImage(emptyOpen, w, h, null);
+					g2d.drawImage(emptyOpen, x, y, width, height, null);
 					break;
 				case 1:
-					g2d.drawImage(one, w, h, null);
+					g2d.drawImage(one, x, y, width, height, null);
 					break;
 				case 2:
-					g2d.drawImage(two, w, h, null);
+					g2d.drawImage(two, x, y, width, height, null);
 					break;
 				case 3:
-					g2d.drawImage(three, w, h, null);
+					g2d.drawImage(three, x, y, width, height, null);
 					break;
 				case 4:
-					g2d.drawImage(four, w, h, null);
+					g2d.drawImage(four, x, y, width, height, null);
 					break;
 				case 5:
-					g2d.drawImage(five, w, h, null);
+					g2d.drawImage(five, x, y, width, height, null);
 					break;
 				case 6:
-					g2d.drawImage(six, w, h, null);
+					g2d.drawImage(six, x, y, width, height, null);
 					break;
 				case 7:
-					g2d.drawImage(seven, w, h, null);
+					g2d.drawImage(seven, x, y, width, height, null);
 					break;
 				case 8:
-					g2d.drawImage(eight, w, h, null);
+					g2d.drawImage(eight, x, y, width, height, null);
+					break;
+				default:
+					System.err.println("Could not draw image");
 					break;
 				}
 			}
 		} else if (flag) {
-			g2d.drawImage(flagPic, w, h, null);
+			g2d.drawImage(flagPic, x, y, width, height, null);
 		} else {
-			g2d.drawImage(empty, w, h, null);
+			g2d.drawImage(empty, x, y, width, height, null);
 		}
 	}
 
 	void gameover(Graphics2D g) {
-		int w = i * width, h = j * height;
+		int x = i * width, y = j * height;
 		if (bomb) {
 			if (flag)
-				g.drawImage(flagPic, w, h, null);
+				g.drawImage(flagPic, x, y, width, height, null);
 			else
-				g.drawImage(bombPic, w, h, null);
+				g.drawImage(bombPic, x, y, width, height, null);
 		} else if (flag) {
-			g.drawImage(flagError, w, h, null);
+			g.drawImage(flagError, x, y, width, height, null);
 		} else {
 			switch (bombsAdjecent) {
 			case 0:
-				g.drawImage(emptyOpen, w, h, null);
+				g.drawImage(emptyOpen, x, y, width, height, null);
 				break;
 			case 1:
-				g.drawImage(one, w, h, null);
+				g.drawImage(one, x, y, width, height, null);
 				break;
 			case 2:
-				g.drawImage(two, w, h, null);
+				g.drawImage(two, x, y, width, height, null);
 				break;
 			case 3:
-				g.drawImage(three, w, h, null);
+				g.drawImage(three, x, y, width, height, null);
 				break;
 			case 4:
-				g.drawImage(four, w, h, null);
+				g.drawImage(four, x, y, width, height, null);
 				break;
 			case 5:
-				g.drawImage(five, w, h, null);
+				g.drawImage(five, x, y, width, height, null);
 				break;
 			case 6:
-				g.drawImage(six, w, h, null);
+				g.drawImage(six, x, y, width, height, null);
 				break;
 			case 7:
-				g.drawImage(seven, w, h, null);
+				g.drawImage(seven, x, y, width, height, null);
 				break;
 			case 8:
-				g.drawImage(eight, w, h, null);
+				g.drawImage(eight, x, y, width, height, null);
 				break;
 			}
 		}
@@ -271,6 +274,11 @@ public class Field {
 	}
 
 	// --------------------HELPER-------------------//
+
+	void changeSize(int w, int h) {
+		this.width = w;
+		this.height = h;
+	}
 
 	boolean contains(int x, int y) {
 		return (x > i * width && x < i * width + width && y > j * height && y < j * height + height);
