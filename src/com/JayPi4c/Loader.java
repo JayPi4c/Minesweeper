@@ -37,9 +37,9 @@ public class Loader extends JFrame {
 	 * jeweiligen Klassen geladen.
 	 */
 	public void load() {
-		Field.preLoad();
-		progressBar.setValue(1);
 		Board.preLoad();
+		progressBar.setValue(1);
+		Field.preLoad();
 		progressBar.setValue(2);
 		dispose();
 	}

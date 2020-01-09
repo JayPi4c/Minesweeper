@@ -19,7 +19,7 @@ public class Minesweeper extends JFrame implements MouseListener {
 
 	private static final long serialVersionUID = 2236137673888511655L;
 
-	private Board b;
+	private Board b = null;
 	private boolean gameover = false;
 	private boolean gameWon = false;
 
@@ -43,7 +43,6 @@ public class Minesweeper extends JFrame implements MouseListener {
 		menuBar.add(test);
 		this.setJMenuBar(menuBar);
 		b = new Board(this, width, height);
-		b.init();
 		this.add(b);
 		this.addMouseListener(this);
 		this.setFocusable(true);
@@ -81,6 +80,11 @@ public class Minesweeper extends JFrame implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if (b.isUninitialized()) {
+			Insets insets = this.getInsets();
+			b.init(e.getX() - insets.left, e.getY() - insets.top - 20);
+
+		}
 		if (!gameover && !gameWon) {
 			Insets insets = this.getInsets();
 			if (e.getButton() == MouseEvent.BUTTON1) {
@@ -91,7 +95,6 @@ public class Minesweeper extends JFrame implements MouseListener {
 				gameWon = true;
 		} else {
 			b.restart();
-			b.init();
 			gameover = false;
 			gameWon = false;
 		}
