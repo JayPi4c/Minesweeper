@@ -27,6 +27,11 @@ public class Board extends JPanel {
 	private static BufferedImage GameOverScreen;
 	private static BufferedImage winScreen;
 
+	private boolean initialized = false;
+
+	private static boolean guardSingleField = false;
+	private static boolean guardSurroundingFields = true;
+
 	public Board(Minesweeper m, int width, int height) {
 		this.m = m;
 		this.w = width / cols;
@@ -57,13 +62,50 @@ public class Board extends JPanel {
 				board[i][j] = new Field(m, i, j, w, h);
 			}
 		}
+		initialized = false;
 	}
 
-	void init() {
+	void init(int x, int y) {
 		ArrayList<Field> pool = new ArrayList<Field>();
-		for (Field fs[] : board) {
-			for (Field f : fs) {
-				pool.add(f);
+
+		if (guardSurroundingFields) {
+			int i_target = -1;
+			int j_target = -1;
+			for (int i = 0; i < board.length; i++) {
+				for (int j = 0; j < board[0].length; j++) {
+					if (board[i][j].contains(x, y)) {
+						i_target = i;
+						j_target = j;
+						break;
+					}
+				}
+				if (i_target != -1)
+					break;
+			}
+			if (i_target == -1 && j_target == -1)
+				return;
+
+			for (int i = 0; i < board.length; i++) {
+				for (int j = 0; j < board[0].length; j++) {
+					if (i == i_target || i == i_target - 1 || i == i_target + 1)
+						if (j == j_target || j == j_target - 1 || j == j_target + 1)
+							continue;
+					pool.add(board[i][j]);
+				}
+			}
+		} else if (guardSingleField) {
+			for (Field[] fs : board) {
+				for (Field f : fs) {
+					if (f.contains(x, y))
+						continue;
+					pool.add(f);
+				}
+			}
+		} else {
+			for (Field[] fs : board) {
+				for (Field f : fs) {
+					pool.add(f);
+				}
 			}
 		}
 		for (int i = 0; i < bombCount; i++) {
@@ -76,6 +118,7 @@ public class Board extends JPanel {
 				f.init(this);
 			}
 		}
+		initialized = true;
 	}
 
 	@Override
@@ -133,6 +176,19 @@ public class Board extends JPanel {
 
 	}
 
+	public static void setGuardSingleField(boolean flag) {
+		guardSingleField = flag;
+	}
+
+	public static void setGuardSurroundingFields(boolean flag) {
+		guardSurroundingFields = flag;
+	}
+
+	public static void setNoGuard() {
+		guardSingleField = false;
+		guardSurroundingFields = false;
+	}
+
 	public Field[][] getBoard() {
 		return this.board;
 	}
@@ -145,14 +201,17 @@ public class Board extends JPanel {
 		return this.rows;
 	}
 
+	public boolean isUninitialized() {
+		return !initialized;
+	}
+
 	boolean hasWon() {
 		int counter = 0;
 		for (Field[] fs : board)
 			for (Field f : fs)
 				if (f.isOpend())
 					counter++;
-
-		return counter == (h * w - bombCount);
+		return counter == (cols * rows - bombCount);
 	}
 
 	void gameover(Graphics2D g) {

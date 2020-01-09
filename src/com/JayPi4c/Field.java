@@ -281,7 +281,7 @@ public class Field {
 	}
 
 	boolean contains(int x, int y) {
-		return (x > i * width && x < i * width + width && y > j * height && y < j * height + height);
+		return (x > i * width && x <= i * width + width && y > j * height && y <= j * height + height);
 	}
 
 	boolean isOpend() {
