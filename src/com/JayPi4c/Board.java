@@ -82,6 +82,8 @@ public class Board extends JPanel {
 				if (i_target != -1)
 					break;
 			}
+			if (i_target == -1 && j_target == -1)
+				return;
 
 			for (int i = 0; i < board.length; i++) {
 				for (int j = 0; j < board[0].length; j++) {
