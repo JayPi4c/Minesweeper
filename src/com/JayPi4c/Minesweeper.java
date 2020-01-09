@@ -2,17 +2,16 @@ package com.JayPi4c;
 
 import java.awt.Graphics;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.WindowConstants;
 
 public class Minesweeper extends JFrame implements MouseListener {
@@ -29,18 +28,34 @@ public class Minesweeper extends JFrame implements MouseListener {
 	public Minesweeper() {
 		super("Minesweeper");
 		JMenuBar menuBar = new JMenuBar();
-		JMenuItem settings = new JMenuItem("settings");
-		settings.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO: Adding Actions to Settingsmenu
-				System.out.println("Settingsmenu was pressed");
-			}
+		JMenu settings = new JMenu("settings");
+		ButtonGroup guardSettingsGroup = new ButtonGroup();
+		JRadioButtonMenuItem noGuard = new JRadioButtonMenuItem("no Guard");
+		noGuard.addActionListener(event -> {
+			Board.setNoGuard();
+			noGuard.setSelected(true);
 		});
-		JMenu test = new JMenu("Test");
-		test.add(settings);
-		menuBar.add(test);
+		JRadioButtonMenuItem singleGuard = new JRadioButtonMenuItem("single Guard");
+		singleGuard.addActionListener(event -> {
+			Board.setGuardSingleField(true);
+			singleGuard.setSelected(true);
+		});
+		JRadioButtonMenuItem surroundingGuard = new JRadioButtonMenuItem("surrounding Guard");
+		surroundingGuard.setSelected(true);
+		surroundingGuard.addActionListener(event -> {
+			Board.setGuardSurroundingFields(true);
+			surroundingGuard.setSelected(true);
+		});
+		guardSettingsGroup.add(surroundingGuard);
+		guardSettingsGroup.add(singleGuard);
+		guardSettingsGroup.add(noGuard);
+
+		settings.add(surroundingGuard);
+		settings.add(singleGuard);
+		settings.add(noGuard);
+		settings.addSeparator();
+
+		menuBar.add(settings);
 		this.setJMenuBar(menuBar);
 		b = new Board(this, width, height);
 		this.add(b);
