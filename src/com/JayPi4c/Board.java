@@ -14,6 +14,8 @@ public class Board extends JPanel {
 
 	private static final long serialVersionUID = -1031785993347374710L;
 
+	private int clickCount;
+
 	private Field[][] board;
 
 	private int bombCount = 75;
@@ -37,12 +39,7 @@ public class Board extends JPanel {
 		this.w = width / cols;
 		this.h = height / rows;
 		setPreferredSize(new Dimension(width, height));
-		board = new Field[cols][rows];
-		for (int i = 0; i < cols; i++) {
-			for (int j = 0; j < rows; j++) {
-				board[i][j] = new Field(m, i, j, w, h);
-			}
-		}
+		restart();
 	}
 
 	public static void preLoad() {
@@ -62,6 +59,7 @@ public class Board extends JPanel {
 				board[i][j] = new Field(m, i, j, w, h);
 			}
 		}
+		clickCount = 0;
 		initialized = false;
 	}
 
@@ -143,14 +141,31 @@ public class Board extends JPanel {
 		for (Field fs[] : board) {
 			for (Field f : fs) {
 				if (f.contains(x, y)) {
+					clickCount++;
 					if (!f.isOpend())
-						f.open(this);
+						f.open(this, clickCount);
 					else
-						f.openAdjecent(this);
+						f.openAdjecent(this, clickCount);
 					return;
 				}
 			}
 		}
+	}
+
+	boolean hasUnambiguousChoice() {
+		for (Field[] fs : board)
+			for (Field f : fs) {
+				int bomb = f.getBombsAdjecent();
+				if (bomb == 0)
+					continue;
+				int flags = f.flagsAdjescent(this), unopend = f.unopendAdjescent(this);
+				if (f.isOpend() && ((bomb == flags && unopend > 0) || (bomb == unopend + flags && unopend > 0))) {
+					System.out.println(f.getI() + " " + f.getJ() + " " + f.isOpend() + " bomben:" + bomb + " flaggen: "
+							+ flags + " unopend: " + unopend);
+					return true;
+				}
+			}
+		return false;
 	}
 
 	void changeFlag(int x, int y) {

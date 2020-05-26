@@ -184,7 +184,7 @@ public class Field {
 		}
 	}
 
-	void open(Board b) {
+	void open(Board b, int clickCount) {
 		if (!open && !flag) {
 			open = true;
 			if (bomb) {
@@ -195,52 +195,53 @@ public class Field {
 				// links
 				if (i - 1 >= 0) {
 					if (j - 1 >= 0)
-						b.getBoard()[i - 1][j - 1].open(b);
-					b.getBoard()[i - 1][j].open(b);
+						b.getBoard()[i - 1][j - 1].open(b, clickCount);
+					b.getBoard()[i - 1][j].open(b, clickCount);
 					if (j + 1 < b.getRows())
-						b.getBoard()[i - 1][j + 1].open(b);
+						b.getBoard()[i - 1][j + 1].open(b, clickCount);
 				}
 				// mitte
 				if (j - 1 >= 0)
-					b.getBoard()[i][j - 1].open(b);
+					b.getBoard()[i][j - 1].open(b, clickCount);
 				if (j + 1 < b.getRows())
-					b.getBoard()[i][j + 1].open(b);
+					b.getBoard()[i][j + 1].open(b, clickCount);
 
 				// rechts
 				if (i + 1 < b.getCols()) {
 					if (j - 1 >= 0)
-						b.getBoard()[i + 1][j - 1].open(b);
-					b.getBoard()[i + 1][j].open(b);
+						b.getBoard()[i + 1][j - 1].open(b, clickCount);
+					b.getBoard()[i + 1][j].open(b, clickCount);
 					if (j + 1 < b.getRows())
-						b.getBoard()[i + 1][j + 1].open(b);
+						b.getBoard()[i + 1][j + 1].open(b, clickCount);
 				}
 			}
 		}
+
 	}
 
-	void openAdjecent(Board b) {
+	void openAdjecent(Board b, int clickCount) {
 		if (flagsAdjescent(b) == bombsAdjecent) {
 			// links
 			if (i - 1 >= 0) {
 				if (j - 1 >= 0)
-					b.getBoard()[i - 1][j - 1].open(b);
-				b.getBoard()[i - 1][j].open(b);
+					b.getBoard()[i - 1][j - 1].open(b, clickCount);
+				b.getBoard()[i - 1][j].open(b, clickCount);
 				if (j + 1 < b.getCols())
-					b.getBoard()[i - 1][j + 1].open(b);
+					b.getBoard()[i - 1][j + 1].open(b, clickCount);
 			}
 			// mitte
 			if (j - 1 >= 0)
-				b.getBoard()[i][j - 1].open(b);
+				b.getBoard()[i][j - 1].open(b, clickCount);
 			if (j + 1 < b.getCols())
-				b.getBoard()[i][j + 1].open(b);
+				b.getBoard()[i][j + 1].open(b, clickCount);
 
 			// rechts
 			if (i + 1 < b.getCols()) {
 				if (j - 1 >= 0)
-					b.getBoard()[i + 1][j - 1].open(b);
-				b.getBoard()[i + 1][j].open(b);
+					b.getBoard()[i + 1][j - 1].open(b, clickCount);
+				b.getBoard()[i + 1][j].open(b, clickCount);
 				if (j + 1 < b.getRows())
-					b.getBoard()[i + 1][j + 1].open(b);
+					b.getBoard()[i + 1][j + 1].open(b, clickCount);
 			}
 		}
 	}
@@ -269,6 +270,34 @@ public class Field {
 			counter += b.getBoard()[i + 1][j].hasFlag() ? 1 : 0;
 			if (j + 1 < b.getCols())
 				counter += b.getBoard()[i + 1][j + 1].hasFlag() ? 1 : 0;
+		}
+		return counter;
+	}
+
+	int unopendAdjescent(Board b) {
+		int counter = 0;
+
+		// links
+		if (i - 1 >= 0) {
+			if (j - 1 >= 0)
+				counter += !b.getBoard()[i - 1][j - 1].isOpend() && !b.getBoard()[i - 1][j - 1].hasFlag() ? 1 : 0;
+			counter += !b.getBoard()[i - 1][j].isOpend() && !b.getBoard()[i - 1][j].hasFlag() ? 1 : 0;
+			if (j + 1 < b.getCols())
+				counter += !b.getBoard()[i - 1][j + 1].isOpend() && !b.getBoard()[i - 1][j + 1].hasFlag() ? 1 : 0;
+		}
+		// mitte
+		if (j - 1 >= 0)
+			counter += !b.getBoard()[i][j - 1].isOpend() && !b.getBoard()[i][j - 1].hasFlag() ? 1 : 0;
+		if (j + 1 < b.getCols())
+			counter += !b.getBoard()[i][j + 1].isOpend() && !b.getBoard()[i][j + 1].hasFlag() ? 1 : 0;
+
+		// rechts
+		if (i + 1 < b.getRows()) {
+			if (j - 1 >= 0)
+				counter += !b.getBoard()[i + 1][j - 1].isOpend() && !b.getBoard()[i + 1][j - 1].hasFlag() ? 1 : 0;
+			counter += !b.getBoard()[i + 1][j].isOpend() && !b.getBoard()[i + 1][j].hasFlag() ? 1 : 0;
+			if (j + 1 < b.getCols())
+				counter += !b.getBoard()[i + 1][j + 1].isOpend() && !b.getBoard()[i + 1][j + 1].hasFlag() ? 1 : 0;
 		}
 		return counter;
 	}
@@ -302,5 +331,17 @@ public class Field {
 
 	void changeFlag() {
 		flag = !flag;
+	}
+
+	public int getBombsAdjecent() {
+		return bombsAdjecent;
+	}
+
+	public int getI() {
+		return i;
+	}
+
+	public int getJ() {
+		return j;
 	}
 }

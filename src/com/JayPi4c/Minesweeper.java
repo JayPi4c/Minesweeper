@@ -59,7 +59,7 @@ public class Minesweeper extends JFrame implements MouseListener {
 		this.setJMenuBar(menuBar);
 		b = new Board(this, width, height);
 		this.add(b);
-		this.addMouseListener(this);
+		this.getRootPane().addMouseListener(this);
 		this.setFocusable(true);
 		this.pack();
 		this.setVisible(true);
@@ -96,16 +96,16 @@ public class Minesweeper extends JFrame implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (b.isUninitialized()) {
-			Insets insets = this.getInsets();
-			b.init(e.getX() - insets.left, e.getY() - insets.top - 20);
+			b.init(e.getX(), e.getY());
 
 		}
 		if (!gameover && !gameWon) {
-			Insets insets = this.getInsets();
 			if (e.getButton() == MouseEvent.BUTTON1) {
-				b.openField(e.getX() - insets.left, e.getY() - insets.top - 20);
+				b.openField(e.getX(), e.getY() - 20);
 			} else
-				b.changeFlag(e.getX() - insets.left, e.getY() - insets.top - 20);
+				b.changeFlag(e.getX(), e.getY() - 20);
+			if (!b.hasUnambiguousChoice())
+				System.out.println("no unambigous choice");
 			if (b.hasWon())
 				gameWon = true;
 		} else {
